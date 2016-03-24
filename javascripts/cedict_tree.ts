@@ -32,12 +32,12 @@ class CedictTree {
         var entries: Entry[] = [];
         
         for (var i = 0; i < query.length; i++) {
-            Array.prototype.push.apply(entries, node.entries);
             var nextChar = query[i];
             if (node.suffixes[nextChar] === undefined) {
                 break;
             }
             node = node.suffixes[nextChar];
+            Array.prototype.push.apply(entries, node.entries);
         }
         return entries;
     }
