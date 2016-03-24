@@ -4,8 +4,8 @@
     "target": "es5"
 },
 "files": [
-    "cedict_parser.ts",
-    "cedict_tree.ts",
-    "entry.ts",
-    "typings/tsd.d.ts"
+    "javascripts/cedict_parser.ts",
+    "javascripts/cedict_tree.ts",
+    "javascripts/entry.ts",
+    "javascripts/index.ts"
 ]}
