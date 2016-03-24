@@ -8,7 +8,7 @@ $(() => {
 });
 
 function initCedictTree(): CedictTree {
-    var url = "../data/cedict_ts.u8";
+    var url = "https://raw.githubusercontent.com/johnheroy/node-cc-cedict/master/src/cc-cedict.txt";
     var entries = CedictParser.parse(url);
     return new CedictTree(entries);
 }
