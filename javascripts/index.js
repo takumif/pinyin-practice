@@ -4,15 +4,30 @@
 /// <reference path="cedict_tree.ts" />
 $(function () {
     var dict = initCedictTree();
+    var inputText = "";
     initBindings();
+    function initCedictTree() {
+        var url = "https://raw.githubusercontent.com/johnheroy/node-cc-cedict/master/src/cc-cedict.txt";
+        var entries = CedictParser.parse(url);
+        return new CedictTree(entries);
+    }
+    function initBindings() {
+        $("#submitButton").click(function () {
+            handleUserSubmission($("#inputText").val());
+        });
+    }
+    function handleUserSubmission(text) {
+        console.log(dict.getPrefixEntries(text));
+        inputText = text;
+        populateTextDiv();
+    }
+    function getEntriesForIndex(index) {
+        var query = inputText.substring(index);
+        return dict.getPrefixEntries(query);
+    }
+    function populateTextDiv() {
+        for (var i = 0; i < inputText.length; i++) {
+            $("#text").append("<div style='width: 100; float: left;'>" + inputText[i] + "</div>");
+        }
+    }
 });
-function initCedictTree() {
-    var url = "https://github.com/takumif/pinyin-practice/blob/gh-pages/data/cedict_ts.txt";
-    var entries = CedictParser.parse(url);
-    return new CedictTree(entries);
-}
-function initBindings() {
-    $("#submitButton").click(function () {
-        console.log($("#inputText").text);
-    });
-}

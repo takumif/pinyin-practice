@@ -25,12 +25,12 @@ var CedictTree = (function () {
         var node = this.root;
         var entries = [];
         for (var i = 0; i < query.length; i++) {
-            Array.prototype.push.apply(entries, node.entries);
             var nextChar = query[i];
             if (node.suffixes[nextChar] === undefined) {
                 break;
             }
             node = node.suffixes[nextChar];
+            Array.prototype.push.apply(entries, node.entries);
         }
         return entries;
     };

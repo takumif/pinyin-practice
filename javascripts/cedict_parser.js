@@ -7,7 +7,7 @@ var CedictParser = (function () {
      */
     CedictParser.parse = function (url) {
         var xhr = new XMLHttpRequest();
-        xhr.open("GET", url, false); // open synchronously
+        xhr.open("GET", url, false); // "false" to open synchronously
         xhr.send();
         return CedictParser.parseCedictText(xhr.responseText);
     };
