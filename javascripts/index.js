@@ -4,9 +4,15 @@
 /// <reference path="cedict_tree.ts" />
 $(function () {
     var dict = initCedictTree();
+    initBindings();
 });
 function initCedictTree() {
-    var url = "data/cedict_ts.u8";
+    var url = "https://github.com/takumif/pinyin-practice/blob/gh-pages/data/cedict_ts.txt";
     var entries = CedictParser.parse(url);
     return new CedictTree(entries);
+}
+function initBindings() {
+    $("#submitButton").click(function () {
+        console.log($("#inputText").text);
+    });
 }
