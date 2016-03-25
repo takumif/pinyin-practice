@@ -1,0 +1,12 @@
+#entries {
+    clear: both;
+}
+
+.selectedEntry {
+    background-color: #DDD;
+}
+
+.charDiv {
+    width: 70px;
+    float: left;
+}
