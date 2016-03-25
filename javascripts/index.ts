@@ -29,14 +29,13 @@ $(() => {
     }
 
     function handleUserSubmission(text: string): void {
-        console.log(dict.getPrefixEntries(text));
         inputText = text;
+        currentTextIndex = 0;
         populateTextDiv();
         setCurrentEntries();
     }
     
     function handleKeyPress(id: number): void {
-        console.log(id);
         if (97 <= id && id <= 101) {
             // a number 1 through 5 was pressed on the numpad
             var selection = id - 96;
@@ -50,7 +49,7 @@ $(() => {
             if (currentEntries.length > 0 && currentIndexWithinEntry === 0) {
                 var delta = id === 38 ? -1 : 1;
                 selectedEntryIndex = (selectedEntryIndex + delta + currentEntries.length) % currentEntries.length;
-                console.log(currentEntries[selectedEntryIndex].traditional);
+                updateEntriesDiv();
             }
         }
     }
@@ -63,23 +62,58 @@ $(() => {
         } else {
             console.log("incorrect: " + selectedEntry.traditional + " " + selectedCharPinyin);
         }
+        updateTextAt(currentTextIndex, selectedCharPinyin);
         // TODO: do shit with selection
         
+        currentTextIndex++;
         if (currentIndexWithinEntry < selectedEntry.traditional.length - 1) {
             // still need to look at the remaining characters within the selected entry
             currentIndexWithinEntry++;
-        } else {
-            currentTextIndex += selectedEntry.traditional.length;
-            if (currentTextIndex < inputText.length) {
-                setCurrentEntries();
-            }
+        } else if (currentTextIndex < inputText.length) {
+            setCurrentEntries();
         }
     }
     
+    function updateTextAt(index: number, pinyin = ""): void {
+        $("#char" + String(index)).append(pinyin);
+    }
+    
     function populateTextDiv(): void {
+        $("#text").empty();
         for (var i = 0; i < inputText.length; i++) {
-            $("#text").append("<div style='width: 100; float: left;'>" + inputText[i] + "</div>");
+            var charDiv = $("<div/>", {
+                id: "char" + String(i),
+                class: "charDiv",
+                text: inputText[i]
+            })
+            $("#text").append(charDiv);
         }
+    }
+    
+    function updateEntriesDiv(): void {
+        $("#entries").empty();
+        for (var i = 0; i < currentEntries.length; i++) {
+            var entry = currentEntries[i];
+            var entryDiv = createEntryDiv(entry);
+            if (i == selectedEntryIndex) {
+                entryDiv.addClass("selectedEntry");
+            }
+            $("#entries").append(entryDiv);
+        }
+    }
+    
+    function createEntryDiv(entry: Entry): JQuery {
+        var entryDiv = $("<div/>", {
+            class: "entry"
+        });
+        var tradSpan = $("<span/>", {
+            text: entry.traditional
+        });
+        var engSpan = $("<span/>", {
+            text: entry.english
+        });
+        entryDiv.append(tradSpan).append(engSpan);
+        return entryDiv;
     }
     
     function setCurrentEntries(): void {
@@ -87,11 +121,10 @@ $(() => {
         currentEntries = dict.getPrefixEntries(query);
         selectedEntryIndex = 0;
         currentIndexWithinEntry = 0;
-        
-        console.log("set current entries:");
-        console.log(currentEntries);
+        updateEntriesDiv();
         
         if (currentEntries.length === 0) {
+            // we've hit a character not in the dictionary
             currentTextIndex++;
             if (currentTextIndex >= inputText.length) {
                 // TODO: deal with end of text
