@@ -2,6 +2,7 @@
 /// <reference path="entry.ts" />
 /// <reference path="cedict_parser.ts" />
 /// <reference path="cedict_tree.ts" />
+/// <reference path="pinyin.ts" />
 $(function () {
     var dict = initCedictTree();
     var inputText = "";
@@ -44,21 +45,15 @@ $(function () {
             // up and down arrows
             if (currentEntries.length > 0 && currentIndexWithinEntry === 0) {
                 var delta = id === 38 ? -1 : 1;
-                selectedEntryIndex = (selectedEntryIndex + delta + currentEntries.length) % currentEntries.length;
-                updateEntriesDiv();
+                changeSelectedEntry((selectedEntryIndex + delta + currentEntries.length) % currentEntries.length);
             }
         }
     }
     function handleToneSelection(tone) {
         var selectedEntry = currentEntries[selectedEntryIndex];
         var selectedCharPinyin = selectedEntry.pinyin.split(" ")[currentIndexWithinEntry];
-        if (tone === Number(selectedCharPinyin[selectedCharPinyin.length - 1])) {
-            console.log("correct: " + selectedEntry.traditional + " " + selectedCharPinyin);
-        }
-        else {
-            console.log("incorrect: " + selectedEntry.traditional + " " + selectedCharPinyin);
-        }
-        updateTextAt(currentTextIndex, selectedCharPinyin);
+        var correctTone = tone === Number(selectedCharPinyin[selectedCharPinyin.length - 1]);
+        updateTextAt(currentTextIndex, correctTone, selectedCharPinyin);
         // TODO: do shit with selection
         currentTextIndex++;
         if (currentIndexWithinEntry < selectedEntry.traditional.length - 1) {
@@ -69,18 +64,35 @@ $(function () {
             setCurrentEntries();
         }
     }
-    function updateTextAt(index, pinyin) {
+    function changeSelectedEntry(index) {
+        selectedEntryIndex = index;
+        updateEntriesDiv();
+        $(".selectedEntryChar").removeClass("selectedEntryChar");
+        if (currentEntries.length > 0) {
+            var selectedEntry = currentEntries[index];
+            for (var i = 0; i < selectedEntry.traditional.length; i++) {
+                $("#char" + String(currentTextIndex + i)).addClass("selectedEntryChar");
+            }
+        }
+    }
+    function updateTextAt(index, correctTone, pinyin) {
         if (pinyin === void 0) { pinyin = ""; }
-        $("#char" + String(index)).append(pinyin);
+        var charDiv = $("#char" + String(index));
+        charDiv.find("rt").text(Pinyin.numeralToMark(pinyin));
+        if (correctTone) {
+            charDiv.addClass("correctTone");
+        }
+        else {
+            charDiv.addClass("incorrectTone");
+        }
     }
     function populateTextDiv() {
         $("#text").empty();
         for (var i = 0; i < inputText.length; i++) {
             var charDiv = $("<div/>", {
                 id: "char" + String(i),
-                class: "charDiv",
-                text: inputText[i]
-            });
+                class: "charDiv"
+            }).html("<ruby>" + inputText[i] + "<rt>&nbsp;</rt></ruby>");
             $("#text").append(charDiv);
         }
     }
@@ -110,10 +122,9 @@ $(function () {
     }
     function setCurrentEntries() {
         var query = inputText.substring(currentTextIndex);
-        currentEntries = dict.getPrefixEntries(query);
-        selectedEntryIndex = 0;
+        currentEntries = dict.getPrefixEntries(query).sort(compareEntries);
         currentIndexWithinEntry = 0;
-        updateEntriesDiv();
+        changeSelectedEntry(0);
         if (currentEntries.length === 0) {
             // we've hit a character not in the dictionary
             currentTextIndex++;
@@ -122,6 +133,23 @@ $(function () {
             else {
                 setCurrentEntries();
             }
+        }
+    }
+    function compareEntries(e1, e2) {
+        if (e1.traditional.length > e2.traditional.length) {
+            return -1;
+        }
+        else if (e1.traditional.length < e2.traditional.length) {
+            return 1;
+        }
+        else if (e1.english.length > e2.english.length) {
+            return -1;
+        }
+        else if (e1.english.length < e2.english.length) {
+            return 1;
+        }
+        else {
+            return 0;
         }
     }
 });

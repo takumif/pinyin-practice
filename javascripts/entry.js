@@ -6,4 +6,4 @@ var Entry = (function () {
         this.english = english;
     }
     return Entry;
-}());
+})();

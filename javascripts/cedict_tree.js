@@ -78,7 +78,7 @@ var CedictTree = (function () {
         return node;
     };
     return CedictTree;
-}());
+})();
 var CedictTreeNode = (function () {
     function CedictTreeNode(w) {
         this.word = w;
@@ -86,4 +86,4 @@ var CedictTreeNode = (function () {
         this.suffixes = {};
     }
     return CedictTreeNode;
-}());
+})();
