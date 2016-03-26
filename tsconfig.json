@@ -7,5 +7,6 @@
     "javascripts/cedict_parser.ts",
     "javascripts/cedict_tree.ts",
     "javascripts/entry.ts",
-    "javascripts/index.ts"
+    "javascripts/index.ts",
+    "javascripts/pinyin.ts"
 ]}
