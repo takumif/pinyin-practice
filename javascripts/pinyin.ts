@@ -5,43 +5,66 @@ class Pinyin {
         i: ["i", "ī", "í", "ǐ", "ì"],
         o: ["o", "ō", "ó", "ǒ", "ò"],
         u: ["u", "ū", "ú", "ǔ", "ù"],
-        ü: ["ü", "ǖ", "ǘ", "ǚ", "ǜ"]
+        ü: ["ü", "ǖ", "ǘ", "ǚ", "ǜ"],
+        A: ["A", "Ā", "Á", "Ǎ", "À"],
+        E: ["E", "Ē", "É", "Ě", "È"],
+        O: ["O", "Ō", "Ó", "Ǒ", "Ò"]    
     };
     
-    static numeralToMark(numPin: string): string {
-        var tone = Number(numPin[numPin.length - 1]);
+    static numeralToMark(pinyin: string): string {
+        var tone = Number(pinyin[pinyin.length - 1]);
         
-        if (numPin.length < 2 || isNaN(tone)) {
-            return numPin;
+        if (pinyin.length < 2 || isNaN(tone)) {
+            return pinyin;
         }
-        if (numPin.indexOf(":") !== -1) {
-            numPin = numPin.replace(":", "").replace("u", "ü");
+        if (pinyin.indexOf(":") !== -1) {
+            pinyin = pinyin.replace(":", "").replace("u", "ü");
         }
-        numPin = numPin.replace("v", "ü");
-        numPin = numPin.substr(0, numPin.length - 1);
+        pinyin = pinyin.replace("v", "ü");
+        pinyin = pinyin.substr(0, pinyin.length - 1);
         
-        var vowelToMark = Pinyin.getVowelToMark(numPin);
+        var vowelToMark = Pinyin.getVowelToMark(pinyin);
         if (vowelToMark === "") {
-            return numPin;
+            return pinyin;
         }
-        return numPin.replace(vowelToMark, Pinyin.markedVowels[vowelToMark][tone % 5]);
+        return pinyin.replace(vowelToMark, Pinyin.markedVowels[vowelToMark][tone % 5]);
     }
     
-    private static getVowelToMark(numPin: string): string {
-        if (numPin.indexOf("a") !== -1) {
+    static markToNumeral(pinyin: string, replaceUWith="u"): string {
+        for (var vowel in Pinyin.markedVowels) {
+            for (var tone = 1; tone < 5; tone++) {
+                var markedVowel: string = Pinyin.markedVowels[vowel][tone];
+                if (pinyin.indexOf(markedVowel) !== -1) {
+                    pinyin = pinyin.replace(markedVowel, vowel).replace("u", replaceUWith);
+                    return pinyin + String(tone);
+                }
+            }
+        }
+        pinyin = pinyin.replace("u", replaceUWith);
+        return pinyin + String(5);
+    }
+    
+    private static getVowelToMark(pinyin: string): string {
+        if (pinyin.indexOf("a") !== -1) {
             return "a";
-        } else if (numPin.indexOf("e") !== -1) {
+        } else if (pinyin.indexOf("A") !== -1) {
+            return "A";
+        } else if (pinyin.indexOf("e") !== -1) {
             return "e";
-        } else if (numPin.indexOf("o") !== -1) {
+        } else if (pinyin.indexOf("E") !== -1) {
+            return "E";
+        } else if (pinyin.indexOf("o") !== -1) {
             return "o";
-        } else if (numPin.indexOf("i") !== -1 ||
-                   numPin.indexOf("u") !== -1 ||
-                   numPin.indexOf("ü") !== -1) {
+        } else if (pinyin.indexOf("O") !== -1) {
+            return "O";
+        } else if (pinyin.indexOf("i") !== -1 ||
+                   pinyin.indexOf("u") !== -1 ||
+                   pinyin.indexOf("ü") !== -1) {
             var lastVowelIndex = -1;
             var lastVowel = "";
             
             ["i", "u", "ü"].forEach((vowel, idx, arr) => {
-                var vowelIndex = numPin.indexOf(vowel);
+                var vowelIndex = pinyin.indexOf(vowel);
                 if (vowelIndex > lastVowelIndex) {
                     lastVowelIndex = vowelIndex;
                     lastVowel = vowel;
