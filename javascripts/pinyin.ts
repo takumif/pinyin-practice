@@ -30,17 +30,17 @@ class Pinyin {
         return pinyin.replace(vowelToMark, Pinyin.markedVowels[vowelToMark][tone % 5]);
     }
     
-    static markToNumeral(pinyin: string, replaceUWith="u"): string {
+    static markToNumeral(pinyin: string, replaceüWith="ü"): string {
         for (var vowel in Pinyin.markedVowels) {
             for (var tone = 1; tone < 5; tone++) {
                 var markedVowel: string = Pinyin.markedVowels[vowel][tone];
                 if (pinyin.indexOf(markedVowel) !== -1) {
-                    pinyin = pinyin.replace(markedVowel, vowel).replace("u", replaceUWith);
+                    pinyin = pinyin.replace(markedVowel, vowel).replace("ü", replaceüWith);
                     return pinyin + String(tone);
                 }
             }
         }
-        pinyin = pinyin.replace("u", replaceUWith);
+        pinyin = pinyin.replace("ü", replaceüWith);
         return pinyin + String(5);
     }
     
