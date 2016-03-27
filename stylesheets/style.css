@@ -1,5 +1,11 @@
+body {
+    max-width: 1000px;
+    margin: auto;
+}
+
 rt {
     font-size: 80%;
+    font-family: "Baskerville Old Face";
 }
 
 .selectedEntry {
@@ -12,7 +18,7 @@ rt {
 
 .charDiv {
     font-size: 15pt;
-    width: 35px;
+    min-width: 30px;
     height: 50px;
     text-align: center;
     float: left;
@@ -20,6 +26,22 @@ rt {
 
 .incorrectTone {
     font-weight: bold;
+}
+
+.tone1 {
+    color: #990000;
+}
+
+.tone2 {
+    color: #996600;
+}
+
+.tone3 {
+    color: #006600;
+}
+
+.tone4 {
+    color: #000099;
 }
 
 #entries {
