@@ -40,4 +40,4 @@ var CedictParser = (function () {
         return new Entry(traditional, simplified, pinyin, english);
     };
     return CedictParser;
-})();
+}());
