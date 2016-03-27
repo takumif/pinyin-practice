@@ -23,17 +23,23 @@ $(() => {
         $("#submitButton").click(() => {
             handleUserSubmission($("#inputText").val());
         });
-        
+        $("#previousButton").click(() =>{
+            handleUsePreviousText();
+        });
         $("body").keydown((event: JQueryKeyEventObject) => {
             handleKeyPress(event.which);
         });
     }
 
     function handleUserSubmission(text: string): void {
-        inputText = text;
-        currentTextIndex = 0;
-        populateTextDiv();
-        setCurrentEntries();
+        localStorage.setItem("text", text);
+        startWithText(text);
+    }
+    
+    function handleUsePreviousText(): void {
+        var text = localStorage.getItem("text");
+        $("#inputText").text(text);
+        startWithText(text);
     }
     
     function handleKeyPress(id: number): void {
@@ -57,8 +63,8 @@ $(() => {
     function handleToneSelection(tone: number): void {
         var selectedEntry = currentEntries[selectedEntryIndex];
         var selectedCharPinyin = selectedEntry.pinyin.split(" ")[currentIndexWithinEntry];
-        var correctTone = tone === Number(selectedCharPinyin[selectedCharPinyin.length - 1]);
-        updateTextAt(currentTextIndex, correctTone, selectedCharPinyin);
+        var correctTone = Number(selectedCharPinyin[selectedCharPinyin.length - 1]);
+        updateTextAt(currentTextIndex, tone === correctTone, selectedCharPinyin, correctTone);
         // TODO: do shit with selection
         
         currentTextIndex++;
@@ -68,6 +74,13 @@ $(() => {
         } else if (currentTextIndex < inputText.length) {
             setCurrentEntries();
         }
+    }
+    
+    function startWithText(text: string): void {
+        inputText = text;
+        currentTextIndex = 0;
+        populateTextDiv();
+        setCurrentEntries();
     }
     
     function changeSelectedEntry(index: number): void {
@@ -83,13 +96,16 @@ $(() => {
         }
     }
     
-    function updateTextAt(index: number, correctTone: boolean, pinyin = ""): void {
+    function updateTextAt(index: number, correctTone: boolean, pinyin = "", color: number = null): void {
         var charDiv = $("#char" + String(index));
         charDiv.find("rt").text(Pinyin.numeralToMark(pinyin));
         if (correctTone) {
             charDiv.addClass("correctTone");
         } else {
             charDiv.addClass("incorrectTone");
+        }
+        if (color) {
+            charDiv.addClass("tone" + String(color));
         }
     }
     
