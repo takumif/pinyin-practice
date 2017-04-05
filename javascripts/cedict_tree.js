@@ -19,7 +19,7 @@ var CedictTree = (function () {
         return node != null ? this.gatherEntriesUnderNode(node) : [];
     };
     /**
-     * E.g. for a query of "我們是" this will return 我 and 我們
+     * E.g. for a query of "我們是" this will return entries for 我 and 我們
      */
     CedictTree.prototype.getPrefixEntries = function (query) {
         var node = this.root;

@@ -27,7 +27,7 @@ $(() => {
             handleUsePreviousText();
         });
         $("body").keydown((event: JQueryKeyEventObject) => {
-            handleKeyPress(event.which);
+            handleKeyPress(event, event.which);
         });
     }
 
@@ -42,7 +42,7 @@ $(() => {
         startWithText(text);
     }
     
-    function handleKeyPress(id: number): void {
+    function handleKeyPress(event: JQueryKeyEventObject, id: number): void {
         if (97 <= id && id <= 101) {
             // a number 1 through 5 was pressed on the numpad
             var selection = id - 96;
@@ -53,6 +53,10 @@ $(() => {
             handleToneSelection(selection);
         } else if (id === 38 || id === 40) {
             // up and down arrows
+            if (event.target.nodeName === "TEXTAREA") {
+                return;
+            }
+            event.preventDefault();
             if (currentEntries.length > 0 && currentIndexWithinEntry === 0) {
                 var delta = id === 38 ? -1 : 1;
                 changeSelectedEntry((selectedEntryIndex + delta + currentEntries.length) % currentEntries.length);

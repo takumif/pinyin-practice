@@ -24,7 +24,7 @@ $(function () {
             handleUsePreviousText();
         });
         $("body").keydown(function (event) {
-            handleKeyPress(event.which);
+            handleKeyPress(event, event.which);
         });
     }
     function handleUserSubmission(text) {
@@ -36,7 +36,7 @@ $(function () {
         $("#inputText").text(text);
         startWithText(text);
     }
-    function handleKeyPress(id) {
+    function handleKeyPress(event, id) {
         if (97 <= id && id <= 101) {
             // a number 1 through 5 was pressed on the numpad
             var selection = id - 96;
@@ -49,6 +49,10 @@ $(function () {
         }
         else if (id === 38 || id === 40) {
             // up and down arrows
+            if (event.target.nodeName === "TEXTAREA") {
+                return;
+            }
+            event.preventDefault();
             if (currentEntries.length > 0 && currentIndexWithinEntry === 0) {
                 var delta = id === 38 ? -1 : 1;
                 changeSelectedEntry((selectedEntryIndex + delta + currentEntries.length) % currentEntries.length);
