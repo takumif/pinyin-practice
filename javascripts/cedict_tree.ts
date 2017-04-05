@@ -25,7 +25,7 @@ class CedictTree {
     }
     
     /**
-     * E.g. for a query of "我們是" this will return 我 and 我們
+     * E.g. for a query of "我們是" this will return entries for 我 and 我們
      */
     getPrefixEntries(query: string): Entry[] {
         var node = this.root;
