@@ -26,7 +26,7 @@ body {
 
 rt {
     font-size: 80%;
-    font-family: "Baskerville Old Face";
+    font-family: "Gentium";
 }
 
 .selectedEntry {
@@ -39,21 +39,28 @@ rt {
 
 #text {
     margin-bottom: 250px;
-    overflow: auto;
 }
 
 .tone1 {
     color: #990000;
+    background-color: #ffcccc;
 }
 
 .tone2 {
     color: #996600;
+    background-color: #ffeecc;
 }
 
 .tone3 {
     color: #006600;
+    background-color: #ccffcc;
 }
 
 .tone4 {
     color: #000099;
+    background-color: #ccccff;
+}
+
+.tone5 {
+    background-color: #ccccbb;
 }
